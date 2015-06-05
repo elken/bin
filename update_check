@@ -1,0 +1,82 @@
+#!/bin/sh
+
+PA_UP_CACHE=$HOME/.pa_up_cache
+proceed() {
+    Y="`gettext pacman Y`"; y="$(echo $Y | tr '[:upper:]' '[:lower:]')";
+    N="`gettext pacman N`"; n="$(echo $N | tr '[:upper:]' '[:lower:]')"
+    case "$1" in
+        y)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [Y/n] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $Y|$y|'') return 0;;
+                *) return 1;;
+            esac;;
+        n)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [y/N] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $N|$n|'') return 0;;
+                *) return 1;;
+            esac;;
+    esac
+}
+
+clean() {
+    rm $PA_UP_CACHE
+    unset PA_UP_CACHE
+    exit 0
+}
+
+update() {
+    pacaur -Syu --noconfirm --force
+    reboot_check
+    clean
+}
+
+update_check() {
+    if [[ ! -f $PA_UP_CACHE ]]; then
+        checkupdates > $PA_UP_CACHE
+        pacaur -ak 2>&1 >> $PA_UP_CACHE
+    fi
+    
+    if [[ $(wc -l $PA_UP_CACHE | awk '{print $1}') == 0 ]]; then
+        echo -e "${colorG}Nothing to update!${reset}"
+        clean
+    else
+       echo -e "${colorY}$(wc -l $PA_UP_CACHE | awk '{print $1}')${reset} updates available."
+       if proceed "y" "Update now?"; then
+           update
+       else
+           clean
+       fi
+    fi
+    if [[ -f "$HOME/.init" ]]; then
+        if proceed "y" "Need to regen initramfs, proceed?"; then
+            sudo mkinitcpio -p linux
+        else
+            echo -e "${colorM}New initramfs needed, please run \"mkinitcpio -p linux\" as root"
+        fi
+    fi
+}
+
+reboot_check() {
+    for i in {linux,nvidia,mesa}; do
+        if grep -q $i $PA_UP_CACHE ; then
+            if proceed "y" "Reboot now?"; then
+                touch $HOME/.init
+                sudo shutdown -r now
+            else
+                echo -e "${colorM}Reboot recommended${reset}"
+                clean
+            fi
+        fi
+    done
+}
+
+if proceed "y" "Check for updates?"; then
+    update_check
+else
+    startx
+    exit 0
+fi
