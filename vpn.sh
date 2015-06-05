@@ -1,5 +1,4 @@
 #!/bin/sh
-
 current=$(ls /run/openvpn | cut -d. -f1)
 choice=$(echo "1: AMS_1\n2: AMS_2\n3: LON_3\n4: NYC_1\n5: Restart \"${current}\"" | dmenu -i -fn "Meslo LG M for Powerline-9" -nf "#586e75" -nb "#002b36" -sf "#268bd2" -sb "#002b36" | cut -f1)
 
