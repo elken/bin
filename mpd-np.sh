@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-NP=`mpc current`
-POS=`mpc | head -2 | tail -1 | awk '{print $3}'`
+NP=$(mpc current)
+POS=$(mpc | head -2 | tail -1 | awk '{print $3}')
 
-if [[ ${NP} == "" ]]; then
+if [ ${NP} == "" ]; then
     echo "Nothing playing"
 else
     echo ${NP} :: ${POS}

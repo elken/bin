@@ -7,19 +7,18 @@ xset -dpms
 xset s off
 xsetroot -cursor_name left_ptr
 
-dunst 2>&1 ~/.logs/dunst &
+dunst &
 nitrogen --restore &
-steam 2>&1 ~/.logs/steam &
-emacs --daemon 2>&1 ~/.logs/emacs&
+steam &
+emacs --daemon &
 thunar --daemon &
-urxvtd -q -f -o 2>&1 ~/.logs/urxvt &
-compton 2>&1 ~/.logs/compton &
-if [ ! -e /tmp/dwm.fifo ]; then mkfifo /tmp/dwm.fifo; fi
+urxvtd -q -f -o &
+compton &
 [ ! -s ~/.config/mpd/pid ] && mpd &
-iceweasel 2>&1 ~/.logs/iceweasel &
-icedove 2>&1 ~/.logs/icedove &
+iceweasel &
+icedove &
 
 while true; do
-        killall conky dzen2 ; ~/bin/conky-dzen 2>&1 ~/.logs/conky-dzen &
-	~/.dwm/dwm 2>&1 ~/.logs/dwm
+        ~/bin/dwm-status.sh 2> ~/.logs/status &
+        ~/.dwm/dwm 2> ~/.logs/dwm
 done

@@ -1,4 +1,4 @@
 #!/bin/sh
 bg="#002b36"
 
-conky -c ~/.dwm/.conky/dzen | dzen2 -bg $bg -e '' -h 16 -ta l -fn 'Meslo LG M for Powerline-10' -y '0' -x '570' -p
+conky -c ~/.dwm/.conky/dzen | /usr/local/bin/dzen2 -bg $bg -e '' -h 16 -ta l -fn 'Meslo LG M for Powerline-10' -y '0' -x '570' -p
