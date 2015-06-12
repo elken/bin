@@ -7,18 +7,17 @@ xset -dpms
 xset s off
 xsetroot -cursor_name left_ptr
 
-dunst &
-nitrogen --restore &
-steam &
-emacs --daemon &
-thunar --daemon &
-urxvtd -q -f -o &
-compton &
 [ ! -s ~/.config/mpd/pid ] && mpd &
+emacs --daemon &
+dunst &
+steam &
+thunar --daemon &
+compton &
 iceweasel &
 icedove &
 
 while true; do
+        killall dwm-status.sh
         ~/bin/dwm-status.sh 2> ~/.logs/status &
         ~/.dwm/dwm 2> ~/.logs/dwm
 done
