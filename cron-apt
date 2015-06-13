@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ $(apt-fast update 2>&1 | grep Get) ]]; then
+    if [[ $(apt list --upgradable 2> /dev/null | grep -v Listing | wc -l) ]]; then
+         echo $(apt list --upgradable 2> /dev/null | grep -v Listing | wc -l) > /etc/apt/total_updates
+    fi
+fi
+

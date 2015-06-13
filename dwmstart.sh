@@ -9,7 +9,6 @@ xsetroot -cursor_name left_ptr
 
 [ ! -s ~/.config/mpd/pid ] && mpd &
 wicd-gtk -t &
-steam &
 emacs --daemon &
 dunst &
 thunar --daemon &
@@ -17,7 +16,5 @@ compton &
 iceweasel &
 icedove &
 
-while true; do
-        ~/bin/dwm-status.sh 2> ~/.logs/status &
-        ~/.dwm/dwm 2> ~/.logs/dwm
-done
+~/bin/dwm-status.sh 2> ~/.logs/status &
+~/.dwm/dwm 2> ~/.logs/dwm

@@ -52,8 +52,8 @@ getCPU() {
  }
 
 getUpdates() {
-    upd="$(apt list --upgradable 2> /dev/null | wc -l)"
-    if [ "${upd}" -le 1 ]; then
+    upd="$(cat /etc/apt/total_updates)"
+    if [ "${upd}" -le 0 ]; then
         echo -ne ""
     else
         echo -ne "${red}§${normal} ${upd} "
