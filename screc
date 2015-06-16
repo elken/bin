@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ "${1}" == "" ]; then
+    echo -ne "usage: screc <filename>\n"
+    exit
+else
+    if [ "${2}" == "" ]; then
+        avconv -f x11grab -s $(xrandr | awk '/*/ {print $1}') -r 24 -i $DISPLAY -deadline realtime -b 5000000 -minrate 200000 -maxrate 40000000 -y $1 2> ~/.logs/avconv/$1.log
+    else
+        avconv -f x11grab -s $(xrandr | awk '/*/ {print $1}') -r 24 -i $DISPLAY -deadline realtime -b 5000000 -minrate 200000 -maxrate 40000000 -y -t $2 $1 2> ~/.logs/avconv/$1.log
+    fi
+fi

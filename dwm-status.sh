@@ -85,7 +85,11 @@ getMusic() {
         else
             music_str+="${blue}ç"
         fi
-        music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
+        if [ $(expr length "$(mpc current)") -le 60 ]; then
+            music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
+        else
+            music_str+=" $(mpc current | ticker -l 60 -t 1000) ($(mpc | head -2 | tail -1 | awk '{print $3}'))" 
+        fi
     else
         music_str+=""
     fi
@@ -98,5 +102,5 @@ getTime() {
 }
 
 while true; do
-    xsetroot -name "$(getSound)$(getMusic)$(getBattery) $(getCPU) $(getMEM) $(getUpdates)$(getTime)"
+    xsetroot -name "$(getSound)$(getMusic)$(getBattery)$(getCPU) $(getMEM) $(getUpdates)$(getTime)"
 done
