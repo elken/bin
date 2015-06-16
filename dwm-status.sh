@@ -85,10 +85,10 @@ getMusic() {
         else
             music_str+="${blue}ç"
         fi
-        if [ $(expr length "$(mpc current)") -le 60 ]; then
+        if [ $(expr length "$(mpc current)") -le 50 ]; then
             music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
         else
-            music_str+=" $(mpc current | ticker -l 60 -t 1000) ($(mpc | head -2 | tail -1 | awk '{print $3}'))" 
+            music_str+=" $(mpc current | ticker -l 50 -t 1000) ($(mpc | head -2 | tail -1 | awk '{print $3}'))" 
         fi
     else
         music_str+=""
