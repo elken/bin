@@ -80,7 +80,7 @@ getSound() {
 getMusic() {
     music_str="" 
     if [ "$(mpc current)" != "" ]; then
-        if [ $(mpc | awk '/\[/ {print $1}') == "[playing]" ]; then
+        if [ $(mpc | awk '/^\[/ {print $1}') == "[playing]" ]; then
             music_str+="${blue}æ"
         else
             music_str+="${blue}ç"
