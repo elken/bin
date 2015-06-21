@@ -4,7 +4,7 @@ OS=$(cat /etc/os-release | awk '/^ID/ {print substr($1 ,4)}')
 if [ "${OS}" == "debian" ]; then
     if [[ $(apt-fast update 2>&1 | grep Get) ]]; then
         if [[ $(apt list --upgradable 2> /dev/null | grep -v Listing | wc -l) ]]; then
-            echo $(apt list --upgradable 2> /dev/null | grep -v Listing | wc -l) > /etc/apt/total_updates
+            echo $(apt list --upgradable 2> /dev/null | grep -v Listing | wc -l) > /home/elken/.total_updates
         fi
     fi
 elif [ "${OS}" == "arch" ]; then
