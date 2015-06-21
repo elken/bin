@@ -40,15 +40,20 @@ getCPU() {
 }
 
 getMEM() {
-     total=$(free -m | awk '/Mem:/ {print $2}')
-     mem="$(bc <<< ${total}-$(free -m | awk '/Mem:/ {print $7}'))"
-     if [ $(bc <<< "${mem}<$(echo ${total}* .25 | bc)") == 1 ]; then
-        echo -ne "${green}"
-     elif [ $(bc <<< "${mem}<$(echo ${total}* .5 | bc)") == 1 ]; then
-        echo -ne "${yellow}"
-     else
-        echo -ne "${red}"
-     fi
+    if [ "$(free -V | awk '{print $4}' | cut -d. -f3)" -le 9 ]; then
+        mem="$(free -m | awk '/-\/+/ {print $3}')"
+        total=$(free -m | awk '/Mem:/ {print $2}')
+    else
+        total=$(free -m | awk '/Mem:/ {print $2}')
+        mem="$(bc <<< ${total}-$(free -m | awk '/Mem:/ {print $7}'))"
+    fi
+    if [ $(bc <<< "${mem}<$(echo ${total}* .25 | bc)") == 1 ]; then
+       echo -ne "${green}"
+    elif [ $(bc <<< "${mem}<$(echo ${total}* .5 | bc)") == 1 ]; then
+       echo -ne "${yellow}"
+    else
+       echo -ne "${red}"
+    fi
  }
 
 getUpdates() {
