@@ -66,7 +66,7 @@ getSound() {
     if [ ${cur_device} == "headphones" ]; then
         out_device="  "
     else
-        out_device="  "
+        out_device="  "
     fi
 
     if [ ${is_muted} == "on" ]; then
