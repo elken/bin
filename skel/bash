@@ -1,0 +1,96 @@
+#!/bin/sh
+
+colorR="\e[38;5;1m"
+colorG="\e[38;5;2m"
+colorY="\e[38;5;3m"
+colorB="\e[38;5;4m"
+colorM="\e[38;5;5m"
+colorC="\e[38;5;6m"
+colorW="\e[38;5;7m"
+reset="\e[0m"
+
+proceed() {
+    Y="`gettext pacman Y`"; y="$(echo $Y | tr '[:upper:]' '[:lower:]')";
+    N="`gettext pacman N`"; n="$(echo $N | tr '[:upper:]' '[:lower:]')"
+    case "$1" in
+        y)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [Y/n] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $Y|$y|'') return 0;;
+                *) return 1;;
+            esac;;
+        n)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [y/N] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $N|$n|'') return 0;;
+                *) return 1;;
+            esac;;
+    esac
+}
+
+show_colors()
+{
+    echo -e "${colorR}red${reset}"
+    echo -e "${colorG}green${reset}"
+    echo -e "${colorY}yellow${reset}"
+    echo -e "${colorB}blue${reset}"
+    echo -e "${colorM}magenta${reset}"
+    echo -e "${colorC}cyan${reset}"
+    echo -e "${colorW}white${reset}"
+}
+
+show_version()
+{
+    echo "v0.01 super mega alpha remix edition"
+    exit 0
+}
+
+show_help()
+{
+    echo -e "Skeleton for a bash program"
+    echo -e "Run without arguments to show help"
+    echo -e "Options:"
+    echo -e "-h\t\tShow this help"
+    echo -e "-v\t\tShow current version"
+    echo -e "-c\t\tShow the available colors"
+    echo -e "-f\t\tDo a function"
+    exit 0
+}
+
+function()
+{
+    echo $1
+}
+
+main()
+{
+    if [ "$#" -eq 0 ]; then
+        echo "Ran with no arguments."
+        show_help
+        exit 1
+    else
+        local OPTIND
+        while getopts hvcf: opt; do
+            case $opt in
+                h)
+                    show_help
+                    ;;
+                v)
+                    show_version
+                    ;;
+                c)
+                    show_colors
+                    ;;
+                f)
+                    function $OPTARG        
+                    ;;
+            esac
+        done
+
+        shift $((OPTIND - 1))
+    fi
+}
+
+main "$@"

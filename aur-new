@@ -1,0 +1,41 @@
+#!/bin/bash
+AUR_DIR=$HOME/build/aur
+
+colorR="\e[38;5;1m"
+colorG="\e[38;5;2m"
+colorY="\e[38;5;3m"
+colorB="\e[38;5;4m"
+colorM="\e[38;5;5m"
+colorC="\e[38;5;6m"
+colorW="\e[38;5;7m"
+reset="\e[0m"
+
+proceed() {
+    Y="`gettext pacman Y`"; y="$(echo $Y | tr '[:upper:]' '[:lower:]')";
+    N="`gettext pacman N`"; n="$(echo $N | tr '[:upper:]' '[:lower:]')"
+    case "$1" in
+        y)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [Y/n] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $Y|$y|'') return 0;;
+                *) return 1;;
+            esac;;
+        n)  printf "${colorB}%s${reset} ${colorW}%s${reset}" $"$2 [y/N] "
+            read -n 1 answer
+            echo
+            case $answer in
+                $N|$n|'') return 0;;
+                *) return 1;;
+            esac;;
+    esac
+}
+
+error_msg() {
+    printf "${colorR}Error: ${colorW}%s${reset}\n" "${1}"
+    exit 1
+}
+
+if [[ -e "${AUR_DIR}/$1" ]]; then
+    error_msg "${1} exists."
+fi

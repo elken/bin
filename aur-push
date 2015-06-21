@@ -61,7 +61,7 @@ show_help()
     exit 0
 }
 
-check_existing()
+function()
 {
     echo $1
 }
@@ -86,7 +86,7 @@ main()
                     show_colors
                     ;;
                 f)
-                    check_existing $OPTARG        
+                    function $OPTARG        
                     ;;
             esac
         done
