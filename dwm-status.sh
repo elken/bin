@@ -64,15 +64,15 @@ getSound() {
     is_muted=$(amixer get Master | awk '/%/ {gsub(/[\[\]]/,""); print $6}' | tail -1)
     cur_device=$(pactl list sinks | awk '/Active Port:/ {print substr($3,15)}' | grep -v "^$")
     if [ ${cur_device} == "headphones" ]; then
-        out_device="  "
+        out_device=("  " "  ")
     else
-        out_device="  "
+        out_device=("  " "  ")
     fi
 
     if [ ${is_muted} == "on" ]; then
-        echo -ne "${green}${out_device}"
+        echo -ne "${green}${out_device[0]}"
     else
-        echo -ne "${red}${out_device}"
+        echo -ne "${red}${out_device[1]}"
     fi
 
 }
