@@ -22,5 +22,4 @@ firefox &
 thunderbird &
 
 ~/bin/dwm-status.sh 2> ~/.logs/status &
-#~/.dwm/dwm 2> ~/.logs/dwm
-~/build/dwm/dwm 2> ~/.logs/dwm
+~/.dwm/dwm 2> ~/.logs/dwm
