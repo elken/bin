@@ -52,7 +52,7 @@ getMEM() {
  }
 
 getUpdates() {
-    upd="$(cat ~/.total_updates)"
+    upd="$(checkupdates | wc -l)"
     if [ "${upd}" -le 0 ]; then
         echo -ne ""
     else

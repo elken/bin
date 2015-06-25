@@ -11,7 +11,8 @@ xset +fp /usr/share/fonts/misc
 xset fp rehash
 
 [ ! -s ~/.config/mpd/pid ] && mpd &
-pulse --start &
+urxvtd -q -f -o &
+pulseaudio --start &
 nitrogen --restore &
 wicd-gtk -t &
 emacs --daemon &
