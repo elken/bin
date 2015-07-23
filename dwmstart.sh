@@ -14,7 +14,7 @@ xset fp rehash
 urxvtd -q -f -o &
 pulseaudio --start &
 nitrogen --restore &
-wicd-gtk -t &
+nm-applet &
 emacs --daemon &
 dunst &
 thunar --daemon &
