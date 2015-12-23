@@ -56,12 +56,12 @@ getMEM() {
     fi
  }
 
+upd=
 getUpdates() {
-    upd="$(checkupdates | wc -l)"
-    if [ "${upd}" -le 0 ]; then
-        echo -ne ""
+    if [ "$(checkupdates | wc -l)" -le 0 ]; then
+        upd=""
     else
-        echo -ne "${red} ${normal}${upd} "
+        upd="${red} ${normal}${upd} "
     fi
 }
 
@@ -104,5 +104,6 @@ getTime() {
 }
 
 while true; do
-    xsetroot -name "$(getSound)$(getMusic)$(getCPU) $(getMEM) $(getUpdates)$(getTime) "
+    getUpdates &
+    xsetroot -name "$(getSound)$(getMusic)$(getCPU) $(getMEM) ${upd}$(getTime) "
 done
