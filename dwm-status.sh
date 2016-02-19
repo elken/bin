@@ -92,8 +92,15 @@ getMusic() {
         fi
 
         music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
-    else
-        music_str+=""
+    elif [ "$($HOME/bin/clem-np.sh)" != "" ]; then
+        local status="$($HOME/bin/clem-np.sh)"
+        if [ "$(echo $status | cut -d '|' -f1)" == "Playing" ]; then
+            music_str+="${blue}"
+        else
+            music_str+="${blue}"
+        fi
+
+        music_str+="$(echo $status | cut -d '|' -f2-)"
     fi
     echo -ne "${music_str} "
 }
