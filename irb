@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ruby -e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift) irb.rb --prompt simple
