@@ -11,20 +11,16 @@ getBattery() {
     time=$(acpi -b | awk '/Battery/ {print " (" substr($5,1,5)")"}')
     is_charging=$(acpi -a | awk '/Adapter/ {print $3}')
 
-    if [ "${is_charging}" == "on-line" ]; then
-        bat_icons=("" "" "")
-    else
-        bat_icons=("" "" "")
-    fi
-
-    if [ ${perc} -eq "100" ]; then
-        echo -ne ""
-    elif [ ${perc} -le "100" ]; then
-        echo -ne "${green}${bat_icons[2]}${normal}${perc}"
-    elif [ ${perc} -le "50" ]; then
-        echo -ne "${yellow}${bat_icons[1]}${normal}${perc}"
-    elif [ ${perc} -le "25" ]; then
-        echo -ne "${red}${bat_icons[0]}${normal}${perc}${time}"
+    if [ "${is_charging}" != "on-line" ]; then
+        if [ ${perc} -eq "100" ]; then
+            echo -ne ""
+        elif [ ${perc} -le "100" ]; then
+            echo -ne "${normal}BAT: ${green}${perc}"
+        elif [ ${perc} -le "50" ]; then
+            echo -ne "${normal}BAT: ${yellow}${perc}"
+        elif [ ${perc} -le "25" ]; then
+            echo -ne "${normal}BAT: ${red}${perc}${time}"
+        fi
     fi
 }
 
@@ -84,24 +80,27 @@ getSound() {
 
 getMusic() {
     music_str="" 
-    if [ "$(mpc current)" != "" ]; then
-        if [ $(mpc | awk '/^\[/ {print $1}') == "[playing]" ]; then
-            music_str+="${blue}"
-        else
-            music_str+="${blue}"
-        fi
+    eval $(sp eval)
 
-        music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
-    elif [ "$($HOME/bin/clem-np.sh)" != "" ]; then
-        local status="$($HOME/bin/clem-np.sh)"
-        if [ "$(echo $status | cut -d '|' -f1)" == "Playing" ]; then
-            music_str+="${blue}"
-        else
-            music_str+="${blue}"
-        fi
+    # if [ "$(mpc current)" != "" ]; then
+    #     if [ $(mpc | awk '/^\[/ {print $1}') == "[playing]" ]; then
+    music_str+="${blue}"
+    #     else
+    #         music_str+="${blue}"
+    #     fi
 
-        music_str+="$(echo $status | cut -d '|' -f2-)"
-    fi
+    #     music_str+=" $(mpc current) ($(mpc | head -2 | tail -1 | awk '{print $3}'))"
+    # elif [ "$($HOME/bin/clem-np.sh)" != "" ]; then
+    #     local status="$($HOME/bin/clem-np.sh)"
+    #     if [ "$(echo $status | cut -d '|' -f1)" == "Playing" ]; then
+    #         music_str+="${blue}"
+    #     else
+    #         music_str+="${blue}"
+    #     fi
+
+    #     music_str+="$(echo $status | cut -d '|' -f2-)"
+    # fi
+    music_str+="${SPOTIFY_TITLE} - ${SPOTIFY_ARTIST}"
     echo -ne "${music_str} "
 }
 
@@ -111,6 +110,6 @@ getTime() {
 }
 
 while true; do
-    getUpdates &
-    xsetroot -name "$(getSound)$(getMusic)$(getCPU) $(getMEM) ${upd}$(getTime) "
+    # getUpdates &
+    xsetroot -name "$(getBattery) $(getSound)$(getCPU) $(getMEM) $(getTime) "
 done
