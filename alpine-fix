@@ -1,0 +1,23 @@
+#!/bin/sh
+if [[ $# -eq 0 ]] ; then
+    echo 'specify ip'
+    exit 0
+fi
+
+cp ~/.docker/machine/certs/ca.pem ~/.docker/machine/machines/pc/ca.pem
+cp ~/.docker/machine/certs/key.pem ~/.docker/machine/machines/pc/key.pem
+cp ~/.docker/machine/certs/cert.pem ~/.docker/machine/machines/pc/cert.pem
+
+cd ~/.docker/machine/machines/pc
+openssl genrsa -out server-key.pem 4096
+openssl req -subj "/CN=Alpine Linux Docker" -sha256 -new -key server-key.pem -out server.csr
+
+# Might comment out
+# openssl x509 -req -days 3650 -in server.csr -CA ~/.docker/machine/certs/ca.pem -CAkey ~/.docker/machine/certs/ca-key.pem -out server.pem
+# replace x.x.x.x by machine ip
+echo subjectAltName = IP:$1,IP:127.0.0.1 > extfile.cnf
+echo extendedKeyUsage = serverAuth >> extfile.cnf
+openssl x509 -req -days 3650 -sha256 -in server.csr -CA ~/.docker/machine/certs/ca.pem -CAkey ~/.docker/machine/certs/ca-key.pem -CAcreateserial -out server.pem -extfile extfile.cnf
+rm extfile.cnf server.csr
+
+scp -i ~/.ssh/pataha-alpine-docker ca.pem server.pem server-key.pem root@$1:/etc/docker/
