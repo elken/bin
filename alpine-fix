@@ -12,12 +12,25 @@ cd ~/.docker/machine/machines/pc
 openssl genrsa -out server-key.pem 4096
 openssl req -subj "/CN=Alpine Linux Docker" -sha256 -new -key server-key.pem -out server.csr
 
-# Might comment out
-# openssl x509 -req -days 3650 -in server.csr -CA ~/.docker/machine/certs/ca.pem -CAkey ~/.docker/machine/certs/ca-key.pem -out server.pem
-# replace x.x.x.x by machine ip
 echo subjectAltName = IP:$1,IP:127.0.0.1 > extfile.cnf
 echo extendedKeyUsage = serverAuth >> extfile.cnf
 openssl x509 -req -days 3650 -sha256 -in server.csr -CA ~/.docker/machine/certs/ca.pem -CAkey ~/.docker/machine/certs/ca-key.pem -CAcreateserial -out server.pem -extfile extfile.cnf
 rm extfile.cnf server.csr
 
 scp -i ~/.ssh/pataha-alpine-docker ca.pem server.pem server-key.pem root@$1:/etc/docker/
+
+docker-machine ssh pc "
+echo \"
+DOCKER_OPTS='
+-H tcp://0.0.0.0:2376
+-H unix:///var/run/docker.sock
+--tlsverify
+--tlscacert /etc/docker/ca.pem
+--tlscert /etc/docker/server.pem
+--tlskey /etc/docker/server-key.pem
+--label provider=generic
+'
+\" > /etc/conf.d/docker
+"
+
+docker-machine ssh pc service docker restart
