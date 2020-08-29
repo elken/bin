@@ -17,7 +17,7 @@ echo extendedKeyUsage = serverAuth >> extfile.cnf
 openssl x509 -req -days 3650 -sha256 -in server.csr -CA ~/.docker/machine/certs/ca.pem -CAkey ~/.docker/machine/certs/ca-key.pem -CAcreateserial -out server.pem -extfile extfile.cnf
 rm extfile.cnf server.csr
 
-scp -i ~/.ssh/pataha-alpine-docker ca.pem server.pem server-key.pem root@$1:/etc/docker/
+scp -i ~/.ssh/k8s ca.pem server.pem server-key.pem root@$1:/etc/docker/
 
 docker-machine ssh pc "
 echo \"
